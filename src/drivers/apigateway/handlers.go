@@ -17,37 +17,75 @@ func Records(svcs *services.Services) gin.HandlerFunc {
 		collection := ctx.Param("collection")
 		db := ctx.Param("database")
 
-		weatherStationQ := ctx.Query("weatherStation")
-		weatherStationF := strings.Split(weatherStationQ, ",")
-		fieldMonitorQ := ctx.Query("fieldMonitor")
-		fieldMonitorF := strings.Split(fieldMonitorQ, ",")
+		fieldsStr := ctx.Query("fields")
+		fieldsList := strings.Split(fieldsStr, ",")
 
-		dateStart, _ := time.Parse(time.RFC3339, "2019-04-00T00:00:00Z")
-		dateEnd, _ := time.Parse(time.RFC3339, "2019-04-30T11:59:59Z")
+		dateStart, _ := time.Parse(time.RFC3339, "2019-01-01T00:00:00Z")
+		dateEnd, _ := time.Parse(time.RFC3339, "2019-10-02T11:59:59Z")
 
 		query := models.FindRecords{
 			DB:         db,
 			Collection: collection,
 			DateStart:  dateStart,
 			DateEnd:    dateEnd,
-			Fields:     weatherStationF,
+			Fields:     fieldsList,
 		}
 
-		records, err := svcs.WeatherStationService.GetRecords(ctx, query)
-
+		records, err := svcs.WeatherStationService.Records(ctx, query)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": "Ocurrió un error al obtener los registros del clima",
+				"error": err.Error(),
 			})
 			return
 		}
 
 		ctx.JSON(http.StatusOK, gin.H{
-			"db":             db,
-			"collection":     collection,
-			"weatherStation": weatherStationF,
-			"fieldMonitor":   fieldMonitorF,
-			"records":        records,
+			"records": records,
+		})
+	}
+}
+
+func LineChart(svcs *services.Services) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		collection := ctx.Param("collection")
+		db := ctx.Param("database")
+
+		fieldsStr := ctx.Query("fields")
+		fieldsList := strings.Split(fieldsStr, ",")
+
+		datesStr := ctx.Query("dates")
+		datesList := strings.Split(datesStr, ",")
+
+		dateStart, _ := time.Parse(time.RFC3339, datesList[0]+"T00:00:00Z")
+		dateEnd, _ := time.Parse(time.RFC3339, datesList[1]+"T23:59:59Z")
+
+		query := models.FindRecords{
+			DB:         db,
+			Collection: collection,
+			DateStart:  dateStart,
+			DateEnd:    dateEnd,
+			Fields:     fieldsList,
+		}
+
+		lineChartData, err := svcs.WeatherStationService.LineChart(ctx, query)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		if lineChartData == nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"data": []interface{}{},
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": lineChartData.Data,
 		})
 	}
 }

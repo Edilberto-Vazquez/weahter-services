@@ -8,4 +8,5 @@ func stationsRoutes(s Server, rg *gin.RouterGroup) {
 	services := s.Services()
 	stations := rg.Group("/weather")
 	stations.GET("/stations/:database/:collection/", Records(services))
+	stations.GET("/stations/:database/:collection/LineChart/", LineChart(services))
 }

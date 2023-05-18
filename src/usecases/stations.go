@@ -39,7 +39,40 @@ func WithMongoWeatherStationRepository() WeatherStationConfig {
 	}
 }
 
-func (ws *WeatherStation) GetRecords(ctx context.Context, query models.FindRecords) ([]map[string]interface{}, error) {
+func (ws *WeatherStation) Records(ctx context.Context, query models.FindRecords) ([]map[string]interface{}, error) {
+
+	results, err := ws.stations.GetRecords(query, ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (ws *WeatherStation) LineChart(ctx context.Context, query models.FindRecords) (*models.LineChart, error) {
+
+	results, err := ws.stations.GetLineChart(query, ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (ws *WeatherStation) BarChart(ctx context.Context, query models.FindRecords) ([]map[string]interface{}, error) {
+
+	results, err := ws.stations.GetRecords(query, ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (ws *WeatherStation) RadialBarChart(ctx context.Context, query models.FindRecords) ([]map[string]interface{}, error) {
 
 	results, err := ws.stations.GetRecords(query, ctx)
 

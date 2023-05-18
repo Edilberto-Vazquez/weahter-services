@@ -8,4 +8,5 @@ import (
 
 type StationRepository interface {
 	GetRecords(query models.FindRecords, ctx context.Context) ([]map[string]interface{}, error)
+	GetLineChart(query models.FindRecords, ctx context.Context) (*models.LineChart, error)
 }

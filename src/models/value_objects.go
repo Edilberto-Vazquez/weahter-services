@@ -36,3 +36,13 @@ type EFMElectricField struct {
 	Distance      uint8     `bson:"distance" json:"distance"`
 	RotorFail     bool      `bson:"rotor_fail" json:"rotor_fail"`
 }
+
+type LineChart struct {
+	Data []struct {
+		Name string `bson:"name" json:"name"`
+		Data []struct {
+			X time.Time `bson:"x"`
+			Y any       `bson:"y"`
+		} `bson:"data" json:"data"`
+	} `bson:"data" json:"data"`
+}
