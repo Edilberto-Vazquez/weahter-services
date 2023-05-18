@@ -2,8 +2,8 @@ package usecases
 
 import (
 	"context"
+	"encoding/json"
 	"log"
-	"reflect"
 
 	"github.com/Edilberto-Vazquez/weahter-services/src/config"
 	"github.com/Edilberto-Vazquez/weahter-services/src/drivers/db"
@@ -74,16 +74,18 @@ func (ws *WeatherStation) BarChart(ctx context.Context, query models.FindRecords
 }
 
 func (ws *WeatherStation) RadialChart(ctx context.Context, query models.FindRecords) (*models.RadialChart, error) {
+	var radialData map[string]int64
+	labels := make([]string, 0)
+	series := make([]int64, 0)
 
 	results, err := ws.stations.GetRadialChart(query, ctx)
 
-	labels := make([]string, 0)
-	series := []int64{results.Range1, results.Range2, results.Range3, results.Range4}
+	data, _ := json.Marshal(*results)
+	json.Unmarshal(data, &radialData)
 
-	radialType := reflect.TypeOf(results).Elem()
-	for i := 0; i < radialType.NumField(); i++ {
-		field := radialType.Field(i)
-		labels = append(labels, field.Name)
+	for k, v := range radialData {
+		labels = append(labels, k)
+		series = append(series, v)
 	}
 
 	if err != nil {
