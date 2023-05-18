@@ -102,7 +102,7 @@ func (m *MongoDBDriver) createRadialPipeline(query models.FindRecords) []primiti
 
 	ranges := map[string]map[string]float64{
 		"range1": {"min": 0.0, "max": 9.5},
-		"range2": {"min": 9.5, "max": 18},
+		"range2": {"min": 9.5, "max": 19},
 		"range3": {"min": 18, "max": 27.5},
 		"range4": {"min": 27.5, "max": 38},
 	}
