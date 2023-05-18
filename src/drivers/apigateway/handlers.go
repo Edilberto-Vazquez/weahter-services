@@ -89,3 +89,44 @@ func LineChart(svcs *services.Services) gin.HandlerFunc {
 		})
 	}
 }
+
+func RadialChart(svcs *services.Services) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		db := ctx.Param("database")
+
+		datesStr := ctx.Query("dates")
+		datesList := strings.Split(datesStr, ",")
+
+		dateStart, _ := time.Parse(time.RFC3339, datesList[0]+"T00:00:00Z")
+		dateEnd, _ := time.Parse(time.RFC3339, datesList[1]+"T23:59:59Z")
+
+		query := models.FindRecords{
+			DB:         db,
+			Collection: "EFMRecords",
+			DateStart:  dateStart,
+			DateEnd:    dateEnd,
+			Fields:     []string{"distance"},
+		}
+
+		radialChartData, err := svcs.WeatherStationService.RadialChart(ctx, query)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		if radialChartData == nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"data": []interface{}{},
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": radialChartData,
+		})
+	}
+}
