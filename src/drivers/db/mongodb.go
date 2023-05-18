@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/Edilberto-Vazquez/weahter-services/src/models"
@@ -36,7 +35,6 @@ func parseProjectionFields(fields []string) primitive.M {
 }
 
 func (m *MongoDBDriver) GetRecords(query models.FindRecords, ctx context.Context) ([]map[string]interface{}, error) {
-	fmt.Print(query)
 
 	var results []map[string]interface{}
 
