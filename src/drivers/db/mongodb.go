@@ -45,6 +45,11 @@ func (m MongoDBDriver) createLinealPipeline(query models.FindRecords) []primitiv
 				"$cond": bson.A{bson.M{"$eq": []interface{}{"$lightning", true}}, 1, 0},
 			},
 		},
+		"rotor_fail": bson.M{
+			"$sum": bson.M{
+				"$cond": bson.A{bson.M{"$eq": []interface{}{"$rotor_fail", true}}, 1, 0},
+			},
+		},
 	}
 
 	// create filter for dates range
@@ -55,7 +60,7 @@ func (m MongoDBDriver) createLinealPipeline(query models.FindRecords) []primitiv
 
 	// group by dates
 	groupTimeStage := bson.M{
-		"_id": bson.M{"$dateToString": bson.M{"format": "%Y-%m-%dT%H:00:00.000Z", "date": "$datetime"}},
+		"_id": bson.M{"$dateToString": bson.M{"format": "%Y-%m-%dT%H:00:00", "date": "$datetime"}},
 	}
 	for _, field := range query.Fields {
 		operation, ok := fieldsOperations[field]
@@ -73,7 +78,7 @@ func (m MongoDBDriver) createLinealPipeline(query models.FindRecords) []primitiv
 	// group by fields
 	groupFieldStage := bson.M{"_id": nil}
 	for _, field := range query.Fields {
-		groupFieldStage[field] = bson.M{"$push": bson.M{"x": "$_id", "y": fmt.Sprintf("$%s", field)}}
+		groupFieldStage[field] = bson.M{"$push": bson.M{"x": "$_id", "y": bson.M{"$round": []interface{}{fmt.Sprintf("$%s", field), 3}}}}
 	}
 	pipeline = append(pipeline, bson.M{"$group": groupFieldStage})
 
@@ -125,7 +130,7 @@ func (m *MongoDBDriver) createRadialPipeline(query models.FindRecords) []primiti
 					bson.M{
 						"$and": []interface{}{
 							bson.M{"$gte": []interface{}{"$distance", v["min"]}},
-							bson.M{"$lte": []interface{}{"$distance", v["max"]}},
+							bson.M{"$lt": []interface{}{"$distance", v["max"]}},
 						},
 					},
 					1,

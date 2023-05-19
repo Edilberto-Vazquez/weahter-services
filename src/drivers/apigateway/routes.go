@@ -11,7 +11,7 @@ func GetRoutes(s Server, r *gin.Engine) {
 	v1 := r.Group("/api/v1")
 	v1.Use(cors.New(
 		cors.Config{
-			AllowOrigins:     []string{"http://localhost:3000"},
+			AllowOrigins:     []string{"http://localhost:8000"},
 			AllowMethods:     []string{"GET", "POST"},
 			AllowHeaders:     []string{"Origin", "Content-Type", "Content-Length", "Authorization"},
 			AllowCredentials: true,

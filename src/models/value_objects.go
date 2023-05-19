@@ -43,8 +43,8 @@ type LineChart struct {
 	Data []struct {
 		Name string `bson:"name" json:"name"`
 		Data []struct {
-			X time.Time `bson:"x"`
-			Y any       `bson:"y"`
+			X string `bson:"x" json:"x"`
+			Y any    `bson:"y" json:"y"`
 		} `bson:"data" json:"data"`
 	} `bson:"data" json:"data"`
 }
