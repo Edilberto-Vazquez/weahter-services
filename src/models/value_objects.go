@@ -31,7 +31,7 @@ type WeatherRecords struct {
 	Rain      float64   `csv:"Rain" bson:"rain" json:"rain"`
 }
 
-type EFMElectricField struct {
+type ElectricFieldRecords struct {
 	DateTime      time.Time `bson:"datetime" json:"datetime"`
 	Lightning     bool      `bson:"lightning" json:"lightning"`
 	ElectricField float64   `bson:"electric_field" json:"electric_field"`
