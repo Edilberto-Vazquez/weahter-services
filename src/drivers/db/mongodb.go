@@ -204,9 +204,9 @@ func (m *MongoDBDriver) GetLineChart(query models.FindRecords, ctx context.Conte
 
 }
 
-func (m *MongoDBDriver) GetRadialChart(query models.FindRecords, ctx context.Context) (*models.RadialRanges, error) {
+func (m *MongoDBDriver) GetRadialChart(query models.FindRecords, ctx context.Context) (*models.RadialChart, error) {
 
-	var result *models.RadialRanges
+	var result *models.RadialChart
 
 	coll := m.client.Database(query.DB).Collection(query.Collection)
 

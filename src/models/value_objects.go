@@ -49,14 +49,9 @@ type LineChart struct {
 	} `bson:"data" json:"data"`
 }
 
-type RadialRanges struct {
-	Range1 int64 `bson:"range1" json:"range1"`
-	Range2 int64 `bson:"range2" json:"range2"`
-	Range3 int64 `bson:"range3" json:"range3"`
-	Range4 int64 `bson:"range4" json:"range4"`
-}
-
 type RadialChart struct {
-	Labels []string `json:"labels"`
-	Series []int64  `json:"ranges"`
+	Range1 int64 `bson:"range1" json:"[0 - 9.5]"`
+	Range2 int64 `bson:"range2" json:"[9.5 - 19]"`
+	Range3 int64 `bson:"range3" json:"[19 - 28.5]"`
+	Range4 int64 `bson:"range4" json:"[28.5 - 38]"`
 }
