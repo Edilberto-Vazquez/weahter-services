@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -43,6 +42,4 @@ func SetEnvironment() {
 	ENVS["APP_ENV"] = os.Getenv(prefix + "APP_ENV")
 	ENVS["PORT"] = os.Getenv(prefix + "PORT")
 	ENVS["DB_URI"] = os.Getenv(prefix + "DB_URI")
-
-	fmt.Println(ENVS)
 }
