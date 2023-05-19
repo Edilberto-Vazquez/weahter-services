@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -36,6 +37,7 @@ func SetEnvironment() {
 		prefix = "TEST_"
 	default:
 		prefix = ""
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	ENVS["APP_ENV"] = os.Getenv(prefix + "APP_ENV")
